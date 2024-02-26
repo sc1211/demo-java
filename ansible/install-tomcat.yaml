@@ -1,0 +1,43 @@
+---
+- hosts: localhost
+  gather_facts: false
+  remote_user: ubuntu
+  # become: yes
+  # become_method: sudo
+  vars:
+     http_port: 9090     
+  tasks:
+    - name: Download Tomcat
+      get_url: 
+        url: https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.86/bin/apache-tomcat-9.0.86.tar.gz
+        dest: /home/ubuntu/apache-tomcat-9.0.86.tar.gz
+
+    - name: Extract archive
+      unarchive:
+        src: /home/ubuntu/apache-tomcat-9.0.86.tar.gz
+        dest: /home/ubuntu
+        remote_src: yes
+    
+    - name: Configure Tomcat Server
+      template:
+        src: server.xml
+        dest: /home/ubuntu/apache-tomcat-9.0.86/conf/
+
+    - name: Install start script
+      copy: 
+        src: tomcat-script.sh
+        dest: /home/ubuntu
+        mode: 0755
+    
+    - name: Start tomcat
+      shell: sh /home/ubuntu/tomcat-script.sh
+
+    - name: wait for tomcat to start
+      wait_for: 
+          port: "{{ http_port }}"
+
+    
+
+      
+
+
