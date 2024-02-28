@@ -29,17 +29,11 @@ start() {
     echo -e "\e[00;31mTomcat is already running (pid: $pid)\e[00m"
   else
     # Start tomcat
-    echo -e "\e[00;32mStarting tomcat\e[00m"
-    #ulimit -n 100000
-    #umask 007
-    #/bin/su -p -s /bin/sh tomcat
-        if [ `user_exists $TOMCAT_USER` = "1" ]
-        then
-                su $TOMCAT_USER -c $CATALINA_HOME/bin/startup.sh
-        else
-                sh $CATALINA_HOME/bin/startup.sh
-        fi
-        status
+    echo -e "\e[00;32mStarting tomcat\e[00m"   
+      
+    sh $CATALINA_HOME/bin/startup.sh
+       
+    status
   fi
   return 0
 }
@@ -79,13 +73,6 @@ stop() {
   return 0
 }
  
-user_exists(){
-        if id -u $1 >/dev/null 2>&1; then
-        echo "1"
-        else
-                echo "0"
-        fi
-}
  
 case $1 in
  
@@ -108,7 +95,7 @@ case $1 in
         ;;
        
         *)
-                echo -e $TOMCAT_USAGE
+            echo -e $TOMCAT_USAGE
         ;;
 esac    
 exit 0

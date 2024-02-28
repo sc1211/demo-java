@@ -30,11 +30,12 @@
         mode: 0755
     
     - name: Start tomcat
-      shell: sh /home/ubuntu/tomcat-script.sh
+      shell: sh /home/ubuntu/tomcat-script.sh start
 
     - name: wait for tomcat to start
       wait_for: 
           port: "{{ http_port }}"
+          delay: 10
 
     
 
